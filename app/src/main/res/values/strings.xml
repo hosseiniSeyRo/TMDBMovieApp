@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">TMDBMovieApp</string>
+
+    <string name="bottom_nav_home">home</string>
+    <string name="bottom_nav_search">search</string>
+    <string name="bottom_nav_bookmark">bookmark</string>
+
+    <string name="fragmentTitle_home">TMDB Movie</string>
+    <string name="fragmentTitle_search">Search</string>
+    <string name="fragmentTitle_bookmark">Bookmark</string>
 </resources>
