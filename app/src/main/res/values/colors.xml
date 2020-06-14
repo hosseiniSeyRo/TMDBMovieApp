@@ -10,4 +10,7 @@
     <color name="divider">#BDBDBD</color>
     <color name="mainBG">#374046</color>
 
+    <color name="bottomNavSelected">@color/colorAccent</color>
+    <color name="bottomNavUnSelected">#FFFFFF</color>
+
 </resources>
