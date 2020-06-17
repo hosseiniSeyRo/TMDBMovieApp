@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/bottomNav_home"
-        android:name="com.parsdroid.tmdbmovieapp.home.HomeFragment"
+        android:name="com.parsdroid.tmdbmovieapp.popularMovies.PopularMoviesFragment"
         android:label="@string/fragmentTitle_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_popular_movies" />
     <fragment
         android:id="@+id/bottomNav_search"
         android:name="com.parsdroid.tmdbmovieapp.search.SearchFragment"

@@ -9,15 +9,19 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.parsdroid.tmdbmovieapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var bottomNavView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setupNavigation()
     }
@@ -27,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.fragNavHost)
 
         // Setting Navigation Controller with the BottomNavigationView
-        bottomNavView = findViewById(R.id.bottomNavView)
+        bottomNavView = binding.bottomNavView
         bottomNavView.setupWithNavController(navController)
 
         // Setting Up ActionBar with Navigation Controller
