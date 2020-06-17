@@ -8,4 +8,6 @@
     <string name="fragmentTitle_home">TMDB Movie</string>
     <string name="fragmentTitle_search">Search</string>
     <string name="fragmentTitle_bookmark">Bookmark</string>
+
+    <string name="errorLoadingMovieList">Error while loading movies</string>
 </resources>
