@@ -1,4 +1,4 @@
-package com.parsdroid.tmdbmovieapp.home
+package com.parsdroid.tmdbmovieapp.popularMovies
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.parsdroid.tmdbmovieapp.R
 
 
-class HomeFragment : Fragment() {
+class PopularMoviesFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
