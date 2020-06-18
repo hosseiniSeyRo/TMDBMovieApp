@@ -1,19 +1,11 @@
 package com.parsdroid.tmdbmovieapp.popularMovies
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import com.parsdroid.tmdbmovieapp.BaseViewModelFactory
 import com.parsdroid.tmdbmovieapp.data.movieList.MovieListRepo
 import javax.inject.Inject
 
 class PopularMoviesViewModelFactory @Inject constructor(
     private val movieListRepo: MovieListRepo
-) :
-    ViewModelProvider.Factory {
-    @Suppress("unchecked_cast")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(PopularMoviesViewModel::class.java)) {
-            return PopularMoviesViewModel(movieListRepo) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
+) : BaseViewModelFactory<PopularMoviesViewModel>(
+    PopularMoviesViewModel::class.java,
+    { PopularMoviesViewModel(movieListRepo) })
