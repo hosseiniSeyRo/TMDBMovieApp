@@ -39,5 +39,7 @@ class ApiModule {
     }
 }
 
-private const val API_KEY = "8d9b685b8524b18b291492e2ecc72e1e"
-private const val BASE_URL = "https://api.themoviedb.org/3"
+private const val API_KEY =
+//    "8d9b685b8524b18b291492e2ecc72e1e"
+    "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4ZDliNjg1Yjg1MjRiMThiMjkxNDkyZTJlY2M3MmUxZSIsInN1YiI6IjU5N2Y1MWI2OTI1MTQxNWQ1ZDAzMzJmMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qWmgoRGDoGQ4noTJIwu03-ScYgck3I0f7Y_3YC6DTHk"
+private const val BASE_URL = "https://api.themoviedb.org/3/"

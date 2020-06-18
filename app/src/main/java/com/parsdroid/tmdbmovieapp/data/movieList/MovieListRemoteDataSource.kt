@@ -5,12 +5,11 @@ import com.parsdroid.tmdbmovieapp.data.TMDBApi
 import com.parsdroid.tmdbmovieapp.data.appModel.Movie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class MovieListRemoteDataSource(val tmdbApi: TMDBApi) {
+class MovieListRemoteDataSource @Inject constructor(val tmdbApi: TMDBApi) {
 
     suspend fun getPopularMovie(page: Int): Result<List<Movie>> {
-        Result.Success(tmdbApi.getPopularMovie(page))
-
         return try {
             withContext(Dispatchers.IO) {
                 Result.Success(
