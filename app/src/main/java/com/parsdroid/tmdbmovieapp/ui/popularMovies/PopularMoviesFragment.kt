@@ -1,4 +1,4 @@
-package com.parsdroid.tmdbmovieapp.popularMovies
+package com.parsdroid.tmdbmovieapp.ui.popularMovies
 
 import android.os.Bundle
 import android.util.Log

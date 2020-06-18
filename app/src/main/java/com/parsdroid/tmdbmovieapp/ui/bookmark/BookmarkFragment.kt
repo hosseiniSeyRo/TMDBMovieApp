@@ -1,4 +1,4 @@
-package com.parsdroid.tmdbmovieapp.bookmark
+package com.parsdroid.tmdbmovieapp.ui.bookmark
 
 import android.os.Bundle
 import android.view.LayoutInflater

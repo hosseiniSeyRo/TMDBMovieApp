@@ -1,7 +1,7 @@
-package com.parsdroid.tmdbmovieapp.popularMovies
+package com.parsdroid.tmdbmovieapp.ui.popularMovies
 
-import com.parsdroid.tmdbmovieapp.BaseViewModelFactory
 import com.parsdroid.tmdbmovieapp.data.movieList.MovieListRepo
+import com.parsdroid.tmdbmovieapp.ui.BaseViewModelFactory
 import javax.inject.Inject
 
 class PopularMoviesViewModelFactory @Inject constructor(

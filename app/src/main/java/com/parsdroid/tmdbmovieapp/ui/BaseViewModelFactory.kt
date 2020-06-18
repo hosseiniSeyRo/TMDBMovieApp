@@ -1,4 +1,4 @@
-package com.parsdroid.tmdbmovieapp
+package com.parsdroid.tmdbmovieapp.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

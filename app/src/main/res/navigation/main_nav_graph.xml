@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/bottomNav_home"
-        android:name="com.parsdroid.tmdbmovieapp.popularMovies.PopularMoviesFragment"
+        android:name="com.parsdroid.tmdbmovieapp.ui.popularMovies.PopularMoviesFragment"
         android:label="@string/fragmentTitle_home"
         tools:layout="@layout/fragment_popular_movies" />
     <fragment
         android:id="@+id/bottomNav_search"
-        android:name="com.parsdroid.tmdbmovieapp.search.SearchFragment"
+        android:name="com.parsdroid.tmdbmovieapp.ui.search.SearchFragment"
         android:label="@string/fragmentTitle_search"
         tools:layout="@layout/fragment_search">
         <action
@@ -21,12 +21,12 @@
     </fragment>
     <fragment
         android:id="@+id/bottomNav_bookmark"
-        android:name="com.parsdroid.tmdbmovieapp.bookmark.BookmarkFragment"
+        android:name="com.parsdroid.tmdbmovieapp.ui.bookmark.BookmarkFragment"
         android:label="@string/fragmentTitle_bookmark"
         tools:layout="@layout/fragment_bookmark" />
     <fragment
         android:id="@+id/bottomNav_search222"
-        android:name="com.parsdroid.tmdbmovieapp.search.SearchFragment222"
+        android:name="com.parsdroid.tmdbmovieapp.ui.search.SearchFragment222"
         android:label="@string/fragmentTitle_search"
         tools:layout="@layout/fragment_search222">
         <argument

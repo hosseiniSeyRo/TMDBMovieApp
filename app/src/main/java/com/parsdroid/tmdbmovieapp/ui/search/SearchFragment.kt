@@ -1,4 +1,4 @@
-package com.parsdroid.tmdbmovieapp.search
+package com.parsdroid.tmdbmovieapp.ui.search
 
 import android.os.Bundle
 import android.view.*

@@ -1,4 +1,4 @@
-package com.parsdroid.tmdbmovieapp.popularMovies
+package com.parsdroid.tmdbmovieapp.ui.popularMovies
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

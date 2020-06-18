@@ -1,6 +1,6 @@
 package com.parsdroid.tmdbmovieapp.di
 
-import com.parsdroid.tmdbmovieapp.popularMovies.PopularMoviesFragment
+import com.parsdroid.tmdbmovieapp.ui.popularMovies.PopularMoviesFragment
 import dagger.Component
 import javax.inject.Singleton
 
