@@ -3,8 +3,10 @@ package com.parsdroid.tmdbmovieapp.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.parsdroid.tmdbmovieapp.data.appModel.Movie
 import com.parsdroid.tmdbmovieapp.databinding.RowMovieItemBinding
+import com.parsdroid.tmdbmovieapp.util.IMAGE_BASE_URL
 
 
 class PopularMoviesAdapter(
@@ -36,6 +38,8 @@ class PopularMoviesAdapter(
         with(holder) {
             with(items[position]) {
                 // TODO
+                Glide.with(holder.itemView).load(IMAGE_BASE_URL + posterPath)
+                    .into(itemBinding.moviePoster)
                 itemBinding.movieReleaseDate.text = releaseDate
                 itemBinding.movieTitle.text = title
                 var genresList: String = ""
