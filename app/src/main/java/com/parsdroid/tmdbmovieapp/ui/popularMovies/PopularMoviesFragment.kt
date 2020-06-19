@@ -11,9 +11,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.parsdroid.tmdbmovieapp.MyApp.Companion.appComponent
-import com.parsdroid.tmdbmovieapp.databinding.FragmentPopularMoviesBinding
+import com.parsdroid.tmdbmovieapp.R
 import com.parsdroid.tmdbmovieapp.ui.adapter.PopularMoviesAdapter
 import com.parsdroid.tmdbmovieapp.util.myLogTag
+import kotlinx.android.synthetic.main.fragment_popular_movies.*
 import javax.inject.Inject
 
 
@@ -22,15 +23,12 @@ class PopularMoviesFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: PopularMoviesViewModelFactory
     private val viewModel: PopularMoviesViewModel by viewModels(factoryProducer = { viewModelFactory })
-    private var _binding: FragmentPopularMoviesBinding? = null
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentPopularMoviesBinding.inflate(inflater, container, false)
-        return binding.root
+        return inflater.inflate(R.layout.fragment_popular_movies, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,10 +40,10 @@ class PopularMoviesFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        binding.rvEmptyLayout.visibility = View.INVISIBLE
-        binding.rvLoadingLayout.visibility = View.INVISIBLE
+        rvEmptyLayout.visibility = View.INVISIBLE
+        rvLoadingLayout.visibility = View.INVISIBLE
 
-        binding.rvList.apply {
+        rvList.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = PopularMoviesAdapter(itemClickListener = {
                 Toast.makeText(
@@ -66,8 +64,8 @@ class PopularMoviesFragment : Fragment() {
             })
             items.observe(viewLifecycleOwner, Observer {
                 printLog(it.toString())
-                (binding.rvList.adapter as PopularMoviesAdapter).addItems(it)
-                showRecyclerView(binding.rvList.adapter?.itemCount != 0)
+                (rvList.adapter as PopularMoviesAdapter).addItems(it)
+                showRecyclerView(rvList.adapter?.itemCount != 0)
             })
             snackbarMessage.observe(viewLifecycleOwner, Observer { printLog(it) })
         }
@@ -77,24 +75,18 @@ class PopularMoviesFragment : Fragment() {
         Log.d(myLogTag, text)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     private fun showLoading(show: Boolean) {
-        if (show) binding.rvLoadingLayout.visibility =
-            View.VISIBLE else binding.rvLoadingLayout.visibility =
-            View.INVISIBLE
+        if (show) rvLoadingLayout.visibility =
+            View.VISIBLE else rvLoadingLayout.visibility = View.INVISIBLE
     }
 
     private fun showRecyclerView(show: Boolean) {
         if (show) {
-            binding.rvList.visibility = View.VISIBLE
-            binding.rvEmptyLayout.visibility = View.INVISIBLE
+            rvList.visibility = View.VISIBLE
+            rvEmptyLayout.visibility = View.INVISIBLE
         } else {
-            binding.rvList.visibility = View.INVISIBLE
-            binding.rvEmptyLayout.visibility = View.VISIBLE
+            rvList.visibility = View.INVISIBLE
+            rvEmptyLayout.visibility = View.VISIBLE
         }
     }
 
