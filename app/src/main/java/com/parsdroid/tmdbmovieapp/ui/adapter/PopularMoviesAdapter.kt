@@ -5,14 +5,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.parsdroid.tmdbmovieapp.data.appModel.Movie
-import com.parsdroid.tmdbmovieapp.databinding.RowMovieItemBinding
+import com.parsdroid.tmdbmovieapp.databinding.ItemLoadingBinding
+import com.parsdroid.tmdbmovieapp.databinding.ItemRowMovieBinding
 import com.parsdroid.tmdbmovieapp.util.IMAGE_BASE_URL
 
 
 class PopularMoviesAdapter(
-    private val items: MutableList<Movie> = mutableListOf(),
+    private val items: MutableList<Movie?> = mutableListOf(),
     private val itemClickListener: ((Int) -> Unit)? = null
-) : RecyclerView.Adapter<PopularMoviesAdapter.MyVH>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val VIEW_TYPE_ITEM = 0
+    private val VIEW_TYPE_LOADING = 1
+    var isLoading: Boolean = false
+        private set
 
     fun addItems(newItems: List<Movie>) {
         val oldSize = this.items.size
@@ -20,30 +26,45 @@ class PopularMoviesAdapter(
         notifyItemRangeInserted(oldSize, newItems.size)
     }
 
-    //Returning view for each item in the list
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyVH {
-        return MyVH(
-            RowMovieItemBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent, false
-            ), itemClickListener
-        );
+    //Returning view for each item in the lis
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == VIEW_TYPE_ITEM) {
+            ItemViewHolder(
+                ItemRowMovieBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent, false
+                ), itemClickListener
+            )
+        } else {
+            LoadingViewHolder(
+                ItemLoadingBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent, false
+                )
+            )
+        }
     }
 
-    override fun getItemCount(): Int = items.size
-    fun getItemAt(position: Int) = items[position]
-
     //Binding the data on the list
-    override fun onBindViewHolder(holder: MyVH, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is ItemViewHolder) {
+            items[position]?.let { bindItemRow(holder, it) }
+        } else if (holder is LoadingViewHolder) {
+            items[position]?.let { /* Do something or nothing */ }
+        }
+    }
+
+    private fun bindItemRow(holder: ItemViewHolder, item: Movie) {
         with(holder) {
-            with(items[position]) {
-                // TODO
-                Glide.with(holder.itemView).load(IMAGE_BASE_URL + posterPath)
+            with(item) {
+                // TODO (bind all of view)
+                Glide.with(holder.itemView).load(IMAGE_BASE_URL + this.posterPath)
                     .into(itemBinding.moviePoster)
-                itemBinding.movieReleaseDate.text = releaseDate
-                itemBinding.movieTitle.text = title
+                itemBinding.movieReleaseDate.text = this.releaseDate
+                itemBinding.movieTitle.text = this.title
+                // TODO (get genres title and bind it)
                 var genresList: String = ""
-                genres?.forEach {
+                this.genres?.forEach {
                     genresList += "$it, "
                 }
                 itemBinding.movieGenre.text = genresList
@@ -51,13 +72,38 @@ class PopularMoviesAdapter(
         }
     }
 
-    //Class holds the list view
-    class MyVH(
-        val itemBinding: RowMovieItemBinding,
+    override fun getItemCount(): Int = items.size
+
+    override fun getItemViewType(position: Int): Int {
+        return if (items[position] == null) VIEW_TYPE_LOADING else VIEW_TYPE_ITEM
+    }
+
+    fun getItem(position: Int) = items[position]
+
+    fun setLoading(loading: Boolean) {
+        if (items.size != 0) {
+            if (loading) {
+                isLoading = true
+                items.add(null)
+                notifyItemInserted(items.size - 1)
+            } else {
+                isLoading = false
+                items.removeAt(items.size - 1)
+                notifyItemRemoved(items.size)
+            }
+        }
+    }
+
+
+    class ItemViewHolder(
+        val itemBinding: ItemRowMovieBinding,
         private val clickListener: ((Int) -> Unit)? = null
     ) : RecyclerView.ViewHolder(itemBinding.root) {
         init {
             itemBinding.root.setOnClickListener { clickListener?.invoke(adapterPosition) }
         }
     }
+
+    private class LoadingViewHolder(val itemBinding: ItemLoadingBinding) :
+        RecyclerView.ViewHolder(itemBinding.root)
 }
