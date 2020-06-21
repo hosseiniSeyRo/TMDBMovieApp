@@ -4,45 +4,62 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.parsdroid.tmdbmovieapp.data.Result
 import com.parsdroid.tmdbmovieapp.data.appModel.Movie
 import com.parsdroid.tmdbmovieapp.data.movieList.MovieListRepo
+import com.parsdroid.tmdbmovieapp.data.movieList.MovieListResponse
+import com.parsdroid.tmdbmovieapp.ui.ResponseState
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class PopularMoviesViewModel(private val movieListRepo: MovieListRepo) :
     ViewModel() {
 
-    private val _items = MutableLiveData<List<Movie>>()
-    val items: LiveData<List<Movie>> = _items
+    private val _loadMoviesState = MutableLiveData<ResponseState<List<Movie>>>()
+    val loadMoviesState: LiveData<ResponseState<List<Movie>>> = _loadMoviesState
 
-    private val _dataLoading = MutableLiveData<Boolean>()
-    val dataLoading: LiveData<Boolean> = _dataLoading
+    val items: MutableList<Movie> = mutableListOf()
 
-    private val _snackbarMessage = MutableLiveData<String>()
-    val snackbarMessage: LiveData<String> = _snackbarMessage
+    var nextPage: Int = 1
+    private var totalPage: Long = 1
+    lateinit var errorMessage: String
+        private set
 
     init {
-        loadPopularMovies(1)
+        loadPopularMovies()
     }
 
-    fun loadPopularMovies(page: Int) {
-        _dataLoading.value = true
-        viewModelScope.launch {
-            computeResult(movieListRepo.getPopularMovie(page))
-            _dataLoading.value = false
+    fun loadPopularMovies() {
+        if (nextPage <= totalPage) {
+            _loadMoviesState.value = ResponseState.Loading
+            viewModelScope.launch {
+                try {
+                    val result = movieListRepo.getPopularMovie(nextPage)
+                    _loadMoviesState.value = ResponseState.Success(result.toMovies())
+                    items.addAll(result.toMovies())
+                    nextPage++
+                    totalPage = result.totalPages
+                } catch (e: IOException) {
+                    //TODO (handle errors)
+                    _loadMoviesState.value = ResponseState.Error(e)
+                    errorMessage = e.message.toString()
+                }
+            }
         }
     }
+}
 
-    private fun computeResult(movieListResult: Result<List<Movie>>) {
-        if (movieListResult is Result.Success) {
-            _items.value = movieListResult.data
-        } else {
-//            setSnackbarMessage(Resources.getSystem().getString(R.string.errorLoadingMovieList))
-            setSnackbarMessage(movieListResult.toString())
-        }
-    }
-
-    private fun setSnackbarMessage(message: String) {
-        _snackbarMessage.value = message
-    }
+private fun MovieListResponse.toMovies(): List<Movie> = results.map {
+    Movie(
+        it.backdropPath,
+        it.genreIds,
+        it.id,
+        it.originalTitle,
+        it.overview,
+        it.popularity,
+        it.posterPath,
+        it.releaseDate,
+        it.title,
+        it.voteAverage,
+        it.voteCount
+    )
 }

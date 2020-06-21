@@ -21,9 +21,11 @@ class PopularMoviesAdapter(
         private set
 
     fun addItems(newItems: List<Movie>) {
-        val oldSize = this.items.size
-        this.items.addAll(newItems)
-        notifyItemRangeInserted(oldSize, newItems.size)
+        if (newItems.isNotEmpty()) {
+            val oldSize = this.items.size
+            this.items.addAll(newItems)
+            notifyItemRangeInserted(oldSize, newItems.size)
+        }
     }
 
     //Returning view for each item in the lis
@@ -49,8 +51,10 @@ class PopularMoviesAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ItemViewHolder) {
             items[position]?.let { bindItemRow(holder, it) }
+//            items[position]?.let { holder.bind(it) }
         } else if (holder is LoadingViewHolder) {
             items[position]?.let { /* Do something or nothing */ }
+//            items[position]?.let { holder.bind(it) }
         }
     }
 
@@ -99,11 +103,31 @@ class PopularMoviesAdapter(
         val itemBinding: ItemRowMovieBinding,
         private val clickListener: ((Int) -> Unit)? = null
     ) : RecyclerView.ViewHolder(itemBinding.root) {
+//        fun bind(item: Movie) {
+//            with(item) {
+//                // TODO (bind all of view)
+//                Glide.with(itemView).load(IMAGE_BASE_URL + this.posterPath)
+//                    .into(itemBinding.moviePoster)
+//                itemBinding.movieReleaseDate.text = this.releaseDate
+//                itemBinding.movieTitle.text = this.title
+//                // TODO (get genres title and bind it)
+//                var genresList: String = ""
+//                this.genres?.forEach {
+//                    genresList += "$it, "
+//                }
+//                itemBinding.movieGenre.text = genresList
+//            }
+//        }
+
         init {
             itemBinding.root.setOnClickListener { clickListener?.invoke(adapterPosition) }
         }
     }
 
     private class LoadingViewHolder(val itemBinding: ItemLoadingBinding) :
-        RecyclerView.ViewHolder(itemBinding.root)
+        RecyclerView.ViewHolder(itemBinding.root) {
+        fun bind(item: Movie) {
+            /* Do something or nothing */
+        }
+    }
 }

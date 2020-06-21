@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.parsdroid.tmdbmovieapp.MyApp.Companion.appComponent
 import com.parsdroid.tmdbmovieapp.R
+import com.parsdroid.tmdbmovieapp.data.appModel.Movie
+import com.parsdroid.tmdbmovieapp.ui.ResponseState
 import com.parsdroid.tmdbmovieapp.ui.adapter.PopularMoviesAdapter
 import com.parsdroid.tmdbmovieapp.util.myLogTag
 import kotlinx.android.synthetic.main.fragment_popular_movies.*
@@ -30,7 +32,6 @@ class PopularMoviesFragment : Fragment() {
     private val visibleThreshold = 1
     private var lastVisibleItem: Int = 0
     private var totalItemCount: Int = 0
-    private var lastPage: Int = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,9 +50,6 @@ class PopularMoviesFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        rvEmptyLayout.visibility = View.INVISIBLE
-        rvLoadingLayout.visibility = View.INVISIBLE
-
         rvAdapter = PopularMoviesAdapter(itemClickListener = {
             Toast.makeText(
                 context,
@@ -72,7 +70,7 @@ class PopularMoviesFragment : Fragment() {
         rvList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                totalItemCount = layoutManager!!.itemCount
+                totalItemCount = layoutManager.itemCount
                 lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                 if (!rvAdapter.isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
                     loadMore()
@@ -81,47 +79,85 @@ class PopularMoviesFragment : Fragment() {
 
             private fun loadMore() {
                 printLog("end of list")
-                rvAdapter.setLoading(true)
-                viewModel.loadPopularMovies(++lastPage)
-                //TODO (handle error in loading last page and decrease lastPage)
-                printLog(lastPage.toString())
+                viewModel.loadPopularMovies()
+                printLog(viewModel.nextPage.toString())
             }
         })
     }
 
     private fun observeViewModel() {
         viewModel.apply {
-            dataLoading.observe(viewLifecycleOwner, Observer {
+            loadMoviesState.observe(viewLifecycleOwner, Observer {
                 printLog(it.toString())
-//                showLoading(it)
+                when (it) {
+                    is ResponseState.Error -> {
+                        printLog("Error: ${it.exception.message.toString()}")
+                        rvAdapter.setLoading(false)
+                        if (rvAdapter.itemCount == 0)
+                            showCorrespondingLayout(RecyclerViewState.ERROR)
+                        else
+                            Toast.makeText(
+                                context,
+                                "Error: ${it.exception.message.toString()}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                    }
+                    is ResponseState.Success<List<Movie>> -> {
+                        rvAdapter.setLoading(false)
+                        rvAdapter.addItems(it.data)
+                        if (rvAdapter.itemCount == 0)
+                            showCorrespondingLayout(RecyclerViewState.EMPTY)
+                        else
+                            showCorrespondingLayout(RecyclerViewState.SUCCESS)
+                    }
+                    ResponseState.Loading -> {
+                        if (rvAdapter.itemCount == 0)
+                            showCorrespondingLayout(RecyclerViewState.LOADING)
+                        else
+                            rvAdapter.setLoading(true)
+                    }
+                }
             })
-            items.observe(viewLifecycleOwner, Observer {
-                printLog(it.toString())
-                rvAdapter.setLoading(false)
-                rvAdapter.addItems(it)
-//                showRecyclerView(rvAdapter.itemCount != 0)
-            })
-            snackbarMessage.observe(viewLifecycleOwner, Observer { printLog(it) })
+        }
+    }
+
+    private fun showCorrespondingLayout(state: RecyclerViewState) {
+        when (state) {
+            RecyclerViewState.SUCCESS -> {
+                rvList.visibility = View.VISIBLE
+                rvLoadingLayout.visibility = View.INVISIBLE
+                rvErrorLayout.visibility = View.INVISIBLE
+                rvEmptyLayout.visibility = View.INVISIBLE
+            }
+            RecyclerViewState.LOADING -> {
+                rvList.visibility = View.INVISIBLE
+                rvLoadingLayout.visibility = View.VISIBLE
+                rvErrorLayout.visibility = View.INVISIBLE
+                rvEmptyLayout.visibility = View.INVISIBLE
+            }
+            RecyclerViewState.ERROR -> {
+                rvList.visibility = View.INVISIBLE
+                rvLoadingLayout.visibility = View.INVISIBLE
+                rvErrorLayout.visibility = View.VISIBLE
+                rvEmptyLayout.visibility = View.INVISIBLE
+            }
+            RecyclerViewState.EMPTY -> {
+                rvList.visibility = View.INVISIBLE
+                rvLoadingLayout.visibility = View.INVISIBLE
+                rvErrorLayout.visibility = View.INVISIBLE
+                rvEmptyLayout.visibility = View.VISIBLE
+            }
         }
     }
 
     private fun printLog(text: String) {
         Log.d(myLogTag, text)
     }
+}
 
-    private fun showLoading(show: Boolean) {
-        if (show && rvAdapter.itemCount == 0) rvLoadingLayout.visibility =
-            View.VISIBLE else rvLoadingLayout.visibility = View.INVISIBLE
-    }
-
-    private fun showRecyclerView(show: Boolean) {
-        if (show) {
-            rvList.visibility = View.VISIBLE
-            rvEmptyLayout.visibility = View.INVISIBLE
-        } else {
-            rvList.visibility = View.INVISIBLE
-            rvEmptyLayout.visibility = View.VISIBLE
-        }
-    }
-
+enum class RecyclerViewState {
+    ERROR,
+    SUCCESS,
+    LOADING,
+    EMPTY
 }
