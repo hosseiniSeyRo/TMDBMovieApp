@@ -63,6 +63,10 @@ class PopularMoviesFragment : Fragment() {
             layoutManager = LinearLayoutManager(activity)
             adapter = rvAdapter
         }
+
+        if (viewModel.items.isNotEmpty()) {
+            rvAdapter.addItems(viewModel.items)
+        }
     }
 
     private fun setupRecyclerViewScrollListener() {
@@ -86,39 +90,42 @@ class PopularMoviesFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.apply {
-            loadMoviesState.observe(viewLifecycleOwner, Observer {
-                printLog(it.toString())
-                when (it) {
-                    is ResponseState.Error -> {
-                        printLog("Error: ${it.exception.message.toString()}")
-                        rvAdapter.setLoading(false)
-                        if (rvAdapter.itemCount == 0)
-                            showCorrespondingLayout(RecyclerViewState.ERROR)
-                        else
-                            Toast.makeText(
-                                context,
-                                "Error: ${it.exception.message.toString()}",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                    }
-                    is ResponseState.Success<List<Movie>> -> {
-                        rvAdapter.setLoading(false)
-                        rvAdapter.addItems(it.data)
-                        if (rvAdapter.itemCount == 0)
-                            showCorrespondingLayout(RecyclerViewState.EMPTY)
-                        else
-                            showCorrespondingLayout(RecyclerViewState.SUCCESS)
-                    }
-                    ResponseState.Loading -> {
-                        if (rvAdapter.itemCount == 0)
-                            showCorrespondingLayout(RecyclerViewState.LOADING)
-                        else
-                            rvAdapter.setLoading(true)
-                    }
+        viewModel.loadMoviesState.observe(viewLifecycleOwner, Observer {
+            printLog(it.toString())
+            when (it) {
+                is ResponseState.Error -> {
+                    printLog("Error: ${it.exception.message.toString()}")
+                    rvAdapter.setLoading(false)
+                    if (rvAdapter.itemCount == 0)
+                        showCorrespondingLayout(RecyclerViewState.ERROR)
+                    else
+                        Toast.makeText(
+                            context,
+                            "Error: ${it.exception.message.toString()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                 }
-            })
-        }
+                is ResponseState.Success<List<Movie>> -> {
+                    rvAdapter.setLoading(false)
+                    rvAdapter.addItems(it.data)
+                    if (rvAdapter.itemCount == 0)
+                        showCorrespondingLayout(RecyclerViewState.EMPTY)
+                    else
+                        showCorrespondingLayout(RecyclerViewState.SUCCESS)
+                }
+                ResponseState.Loading -> {
+                    if (rvAdapter.itemCount == 0)
+                        showCorrespondingLayout(RecyclerViewState.LOADING)
+                    else
+                        rvAdapter.setLoading(true)
+                }
+            }
+        })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.loadMoviesState.removeObservers(viewLifecycleOwner)
     }
 
     private fun showCorrespondingLayout(state: RecyclerViewState) {
