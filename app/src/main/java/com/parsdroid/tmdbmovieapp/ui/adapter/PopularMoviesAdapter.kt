@@ -92,8 +92,10 @@ class PopularMoviesAdapter(
                 notifyItemInserted(items.size - 1)
             } else {
                 isLoading = false
-                items.removeAt(items.size - 1)
-                notifyItemRemoved(items.size)
+                if (items.last() == null) {
+                    items.removeAt(items.size - 1)
+                    notifyItemRemoved(items.size)
+                }
             }
         }
     }
