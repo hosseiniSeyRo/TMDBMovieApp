@@ -1,10 +1,9 @@
-package com.parsdroid.tmdbmovieapp.data
+package com.parsdroid.tmdbmovieapp.data.api
 
-import com.parsdroid.tmdbmovieapp.data.movieList.MovieListResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface TMDBApi {
+interface TMDBService {
 
     @GET("movie/popular")
     suspend fun getPopularMovie(@Query("page") page: Int): MovieListResponse

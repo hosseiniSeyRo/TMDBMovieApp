@@ -1,10 +1,10 @@
-package com.parsdroid.tmdbmovieapp.ui.adapter
+package com.parsdroid.tmdbmovieapp.ui.popularMovies
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.parsdroid.tmdbmovieapp.data.appModel.Movie
+import com.parsdroid.tmdbmovieapp.data.db.entity.Movie
 import com.parsdroid.tmdbmovieapp.databinding.ItemLoadingBinding
 import com.parsdroid.tmdbmovieapp.databinding.ItemRowMovieBinding
 import com.parsdroid.tmdbmovieapp.util.IMAGE_BASE_URL

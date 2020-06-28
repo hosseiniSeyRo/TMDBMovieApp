@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.parsdroid.tmdbmovieapp.data.appModel.Movie
-import com.parsdroid.tmdbmovieapp.data.movieList.MovieListRepo
-import com.parsdroid.tmdbmovieapp.data.movieList.MovieListResponse
+import com.parsdroid.tmdbmovieapp.data.api.MovieListResponse
+import com.parsdroid.tmdbmovieapp.data.db.entity.Movie
+import com.parsdroid.tmdbmovieapp.data.repository.MovieRepository
 import com.parsdroid.tmdbmovieapp.ui.ResponseState
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-class PopularMoviesViewModel(private val movieListRepo: MovieListRepo) :
+class PopularMoviesViewModel(private val movieRepository: MovieRepository) :
     ViewModel() {
 
     private val _loadMoviesState = MutableLiveData<ResponseState<List<Movie>>>()
@@ -33,7 +33,7 @@ class PopularMoviesViewModel(private val movieListRepo: MovieListRepo) :
             _loadMoviesState.value = ResponseState.Loading
             viewModelScope.launch {
                 try {
-                    val result = movieListRepo.getPopularMovie(nextPage)
+                    val result = movieRepository.getPopularMovie(nextPage)
                     _loadMoviesState.value = ResponseState.Success(result.toMovies())
                     items.addAll(result.toMovies())
                     nextPage++

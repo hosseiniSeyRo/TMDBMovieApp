@@ -13,9 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.parsdroid.tmdbmovieapp.MyApp.Companion.appComponent
 import com.parsdroid.tmdbmovieapp.R
-import com.parsdroid.tmdbmovieapp.data.appModel.Movie
+import com.parsdroid.tmdbmovieapp.data.db.entity.Movie
 import com.parsdroid.tmdbmovieapp.ui.ResponseState
-import com.parsdroid.tmdbmovieapp.ui.adapter.PopularMoviesAdapter
 import com.parsdroid.tmdbmovieapp.util.myLogTag
 import kotlinx.android.synthetic.main.fragment_popular_movies.*
 import javax.inject.Inject
@@ -67,14 +66,16 @@ class PopularMoviesFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        rvAdapter = PopularMoviesAdapter(itemClickListener = {
-            Toast.makeText(
-                context,
-                "item clicked: ${rvAdapter.getItem(it)?.title}",
-                Toast.LENGTH_SHORT
-            ).show()
-            printLog("item clicked")
-        })
+        rvAdapter =
+            PopularMoviesAdapter(
+                itemClickListener = {
+                    Toast.makeText(
+                        context,
+                        "item clicked: ${rvAdapter.getItem(it)?.title}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    printLog("item clicked")
+                })
 
         rvList.apply {
             layoutManager = LinearLayoutManager(activity)

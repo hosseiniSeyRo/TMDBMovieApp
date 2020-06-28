@@ -1,4 +1,4 @@
-package com.parsdroid.tmdbmovieapp.data.movieList
+package com.parsdroid.tmdbmovieapp.data.api
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

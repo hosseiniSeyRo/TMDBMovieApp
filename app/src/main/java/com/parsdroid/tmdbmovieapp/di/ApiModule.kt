@@ -1,6 +1,6 @@
 package com.parsdroid.tmdbmovieapp.di
 
-import com.parsdroid.tmdbmovieapp.data.TMDBApi
+import com.parsdroid.tmdbmovieapp.data.api.TMDBService
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -29,13 +29,13 @@ class ApiModule {
 
     @Singleton
     @Provides
-    fun provideTMDBApi(okHttpClient: OkHttpClient): TMDBApi {
+    fun provideTMDBApi(okHttpClient: OkHttpClient): TMDBService {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
-            .create(TMDBApi::class.java)
+            .create(TMDBService::class.java)
     }
 }
 

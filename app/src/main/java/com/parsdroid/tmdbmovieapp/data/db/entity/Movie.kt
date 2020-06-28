@@ -1,4 +1,4 @@
-package com.parsdroid.tmdbmovieapp.data.appModel
+package com.parsdroid.tmdbmovieapp.data.db.entity
 
 data class Movie(
     val backdropPath: String? = null,
