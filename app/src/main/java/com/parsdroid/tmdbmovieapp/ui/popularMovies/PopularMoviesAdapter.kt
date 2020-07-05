@@ -68,9 +68,9 @@ class PopularMoviesAdapter(
                 itemBinding.movieTitle.text = this.title
                 // TODO (get genres title and bind it)
                 var genresList: String = ""
-                this.genres?.forEach {
-                    genresList += "$it, "
-                }
+//                this.genres?.forEach {
+//                    genresList += "$it, "
+//                }
                 itemBinding.movieGenre.text = genresList
             }
         }

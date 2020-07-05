@@ -29,7 +29,7 @@ class ApiModule {
 
     @Singleton
     @Provides
-    fun provideTMDBApi(okHttpClient: OkHttpClient): TMDBService {
+    fun provideTMDBService(okHttpClient: OkHttpClient): TMDBService {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(BASE_URL)

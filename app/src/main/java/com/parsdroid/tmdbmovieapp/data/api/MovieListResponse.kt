@@ -1,64 +1,88 @@
 package com.parsdroid.tmdbmovieapp.data.api
 
+import com.parsdroid.tmdbmovieapp.data.db.entity.Movie
+import com.parsdroid.tmdbmovieapp.data.db.entity.MovieType
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class MovieListResponse(
     @Json(name = "page")
-    val page: Long,
+    var page: Long,
 
     @Json(name = "total_results")
-    val totalResults: Int,
+    var totalResults: Int,
 
     @Json(name = "total_pages")
-    val totalPages: Long,
+    var totalPages: Long,
 
     @Json(name = "results")
-    val results: List<MovieResponse>
+    var results: List<MovieResponse>
 )
 
 @JsonClass(generateAdapter = true)
 data class MovieResponse(
     @Json(name = "popularity")
-    val popularity: Double? = null,
+    var popularity: Double?,
 
     @Json(name = "vote_count")
-    val voteCount: Int? = null,
+    var voteCount: Int?,
 
     @Json(name = "video")
-    val video: Boolean? = null,
+    var video: Boolean?,
 
     @Json(name = "poster_path")
-    val posterPath: String? = null,
+    var posterPath: String?,
 
     @Json(name = "id")
-    val id: Int? = null,
+    var id: Int,
 
     @Json(name = "adult")
-    val adult: Boolean? = null,
+    var adult: Boolean?,
 
     @Json(name = "backdrop_path")
-    val backdropPath: String? = null,
+    var backdropPath: String?,
 
     @Json(name = "original_language")
-    val originalLanguage: String? = null,
+    var originalLanguage: String?,
 
     @Json(name = "original_title")
-    val originalTitle: String? = null,
+    var originalTitle: String?,
 
     @Json(name = "genre_ids")
-    val genreIds: List<Int>? = null,
+    var genreIds: List<Int>?,
 
     @Json(name = "title")
-    val title: String? = null,
+    var title: String?,
 
     @Json(name = "vote_average")
-    val voteAverage: Double? = null,
+    var voteAverage: Double?,
 
     @Json(name = "overview")
-    val overview: String? = null,
+    var overview: String?,
 
     @Json(name = "release_date")
-    val releaseDate: String? = null
+    var releaseDate: String?
 )
+
+/**
+ * Convert Network results to database objects
+ */
+fun MovieListResponse.asLocalModel(movieType: MovieType): List<Movie> {
+    return results.map {
+        Movie(
+            title = it.title,
+            backdropPath = it.backdropPath,
+            id = it.id,
+//            genres = it.genreIds,
+            originalTitle = it.originalTitle,
+            overview = it.overview,
+            popularity = it.popularity,
+            posterPath = it.posterPath,
+            releaseDate = it.releaseDate,
+            voteAverage = it.voteAverage,
+            voteCount = it.voteCount,
+            type = movieType.string
+        )
+    }
+}
